@@ -1,29 +1,33 @@
-# SimpleSwap
+SimpleSwap
+Smart contract in Solidity for swapping ERC-20 tokens and managing liquidity between token pairs.
 
-Smart contract in Solidity for swapping ERC20 tokens and managing liquidity between pairs.
+📌 Description
+SimpleSwap is a lightweight, Uniswap-inspired smart contract that enables users to:
 
-## Description
+Add liquidity to a pool of two ERC-20 tokens.
 
-`SimpleSwap` allows you to:
+Remove their share of liquidity proportionally.
 
-- Add liquidity to a token pair
-- Remove proportional liquidity
-- Swap between tokenA and tokenB
-- Check token price and calculate expected output (`getAmountOut`)
+Swap one token for another using a constant product formula.
 
-The contract is designed to be compatible with an external verifier contract (`SwapVerifier`) and with any ERC20 tokens.
+Check the price of one token in terms of another.
 
-## Requirements
+Estimate the output amount before performing a swap.
 
-- Solidity 0.8.x
-- ERC20-compatible tokens
-- Development environment: Remix, Hardhat, or similar
+It is fully compatible with a verifier contract like SwapVerifier for automated testing.
 
-## Features
+🛠 Requirements
+Solidity ^0.8.0
 
-### Add Liquidity
+Two ERC-20 compatible tokens
 
+Development tools: Remix, Hardhat, Foundry, etc.
+
+🔧 Functions
+🧪 addLiquidity
 solidity
+Copiar
+Editar
 function addLiquidity(
     address tokenA,
     address tokenB,
@@ -34,9 +38,18 @@ function addLiquidity(
     address to,
     uint deadline
 ) external returns (uint amountA, uint amountB, uint liquidity);
+Adds liquidity to the pool.
 
-### Remove Liquidity
+Transfers tokens from the user.
 
+Calculates optimal amounts.
+
+Mints and assigns liquidity tokens to to.
+
+🧪 removeLiquidity
+solidity
+Copiar
+Editar
 function removeLiquidity(
     address tokenA,
     address tokenB,
@@ -46,34 +59,46 @@ function removeLiquidity(
     address to,
     uint deadline
 ) external returns (uint amountA, uint amountB);
+Removes liquidity and returns tokens to the user.
 
-### Swap Tokens
-
+🔄 swapExactTokensForTokens
+solidity
+Copiar
+Editar
 function swapExactTokensForTokens(
     uint amountIn,
     uint amountOutMin,
     address[] calldata path,
     address to,
     uint deadline
-) external;
+) external returns (uint[] memory amounts);
+Swaps an exact amount of input tokens for output tokens.
+Supports simple 1-hop swaps via a path array with two addresses.
 
-### Get Token Price
-
+📈 getPrice
+solidity
+Copiar
+Editar
 function getPrice(address tokenA, address tokenB) external view returns (uint price);
+Returns the price of tokenA in terms of tokenB.
+Uses the internal reserves to calculate (reserveB * 1e18) / reserveA.
 
-### Estimate Output Amount
-
+📊 getAmountOut
+solidity
+Copiar
+Editar
 function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) public pure returns (uint amountOut);
+Estimates how much tokenOut will be received for amountIn tokens.
 
-## Notes
+✅ Features
+No fees charged on swaps or liquidity actions.
 
-    The contract is generic: works with any ERC20 token pair.
+Compatible with any ERC-20 token pair.
 
-    Token order does not matter; it is normalized internally.
+Fully stateless regarding token ordering (normalizes internally).
 
-    The contract does not charge fees.
+Designed to pass automated tests using a verifier contract.
 
-## License
-
+📝 License
 MIT
 
